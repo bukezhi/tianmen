@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta content="yes" name="apple-mobile-web-app-capable" />
+  <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+  <meta name="referrer" content="never">
+  <meta name="applicable-device" content="pc,mobile"> 
+  <meta name="keywords" content="有次,有次博客,有次BLOG,个人博客">
+  <meta name="description" content="有次博客（https://you.ci）成立于2019年的某一场YQ，百般无聊，在家建设有次博客，认识了很多朋友，因为有你们，这次YQ变得充实而有趣。YQ过后，博主也开始创业了，加油^_^！">
+  <title>ECS使用ossfs工具挂载阿里云oss - 天门博客</title>
+  <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <link href='https://cdn.staticdn.net/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://cdn.staticdn.net/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+  <link rel="alternate" type="application/rss+xml" title="ECS使用ossfs工具挂载阿里云oss - 天门 » Feed" href="/atom.xml">
+  <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
+  <link href="https://cdn.jsdelivr.net/gh/bukezhi/bukezhi.github.io/styles/main.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/highlight.min.js"></script>
+  <script src='https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js'></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167888036-1"></script>
+  <script>window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments)
+    }
+    gtag('js', new Date());
+    gtag('config', 'UA-167888036-1');</script>
+  
+
+    <meta property="og:description" content="ECS使用ossfs工具挂载阿里云oss"/>
+    <meta property="og:url" content="http://localhost:4000/post/jfVWs6zzu/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="天门"/>
+  </head>
+  <body>
+  	<!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand" href="/">天门博客</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          
+          <li class="nav-item">
+              
+              <a class="nav-link" href="/">首页</a>
+              
+          </li>
+          
+          <li class="nav-item">
+              
+              <a class="nav-link" href="/archives">归档</a>
+              
+          </li>
+          
+          <li class="nav-item">
+              
+              <a class="nav-link" href="/post/links">邻居</a>
+              
+          </li>
+          
+          <li class="nav-item">
+              
+              <a class="nav-link" href="/post/about">关于</a>
+              
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('https://api.ixiaowai.cn/api/api.php')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+          	<span class="tags">
+          	 
+            <a href="http://localhost:4000/tag/sdusnFT-y/" class="tag">OSS</a>
+            
+        </span>
+            <h1>ECS使用ossfs工具挂载阿里云oss</h1>
+            <span class="meta">
+            	Posted on
+              2020-04-10，3 min read
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <p>研究了很久,始终是无法明白,这个就吃了没有文化的亏,因为不怎么懂linux命令代码,自己部署下来很吃力.<br>
+后来在简书上看到教程,于是学着弄,还是不行,于是网上找了一位老师,支付一些费用,协助挂载完成.几分钟后,算是成功了.<br>
+🤼‍♂<br>
+价值200元的安装教程,笑纳.<br>
+🚴<br>
+准备工具:ECS一台,不得不说,现在阿里云直接网页版提供远程连接,越来越人性化,越来越方便.<br>
+系统安装:linux系统.Centos7.*系统吧,目前宝塔面板仅仅支持7.X系统.<br>
+🎷<br>
+暂时将服务器环境安装完毕:AMP</p>
+<!-- more -->
+<hr>
+<p>第一步:安装依赖包</p>
+<pre><code class="language-javascript">yum install -y automake gcc-c++ git libcurl-devel libxml2-devel fuse-devel make openssl-devel
+</code></pre>
+<p>第二步:依次运行如下代码下载源码包编译</p>
+<pre><code class="language-javascript">git clone https://github.com/aliyun/ossfs.git
+cd ossfs
+./autogen.sh
+./configure
+make &amp;&amp; make install
+</code></pre>
+<p>第三步:依次运行配置阿里云OSS秘钥,配置权限</p>
+<pre><code class="language-javascript">echo Bucket名称:AccessKey ID:Access Key Secret &gt; /etc/passwd-ossfs
+chmod 640 /etc/passwd-ossfs
+</code></pre>
+<p>例:echo wangzhan:LTAI4Fi5udZoCrfGMUq:itGad0BuLS8glE3KM &gt; /etc/passwd-ossfs</p>
+<p>第四步:建立文件夹,并将OSS的<strong>Bucket 名称</strong>挂载到**/home/ossfs**目录下</p>
+<pre><code class="language-javascript">cd
+mkdir /home/ossfs
+ossfs [Bucket空间名] [挂载路径] -ourl=[https://OSS域名]
+</code></pre>
+<p>例:ossfs sdfads /home/ossfs -ourl=http://oss-cn-wuhan.aliyuncs.com</p>
+<p>到这里就挂载成功了.<br>
+因为是外网访问,速度很慢,在阿里云同一地域的ECS与OSS下,可以使用内网域名挂载,免流量.</p>
+<p>开机启动自动挂载:在/etc/rc.local中添加：</p>
+<pre><code class="language-javascript">ossfs Bucket空间名 /home/ossfs -ourl=https://OSS域名 Bucket空间名 -o allow_other
+</code></pre>
+<p>其他看不懂的部分:<br>
+卸载命令：umount /home/Bucket空间名/ 或者 fusermount -u /home/Bucket空间名/</p>
+<p><strong>非阿里云ECS挂载注意事项</strong><br>
+为避免后台程序扫描oss文件导致产生费用，如果是updatedb可以通过修改/etc/updatedb.conf让它跳过。<br>
+具体做法是：<br>
+在PRUNEFS =后面加上fuse.ossfs<br>
+在PRUNEPATHS =后面加上挂载的目录</p>
+<p>感谢:<a href="https://www.jianshu.com/p/30e754bd50f9">https://www.jianshu.com/p/30e754bd50f9</a><br>
+还有:<a href="https://www.cnblogs.com/hnhycnlc888/p/12170476.html">https://www.cnblogs.com/hnhycnlc888/p/12170476.html</a><br>
+❤️</p>
+
+          
+          <p class="next-post">下一篇：
+            <a href="http://localhost:4000/post/C_UYNn0rS/">
+              <span class="post-title">
+                有次博客折腾记录:代码托管到Github&rarr;
+              </span>
+            </a>
+          </p>
+        
+        <div class="comment">
+	  <!-- pinglun -->
+<div id="vcomments"></div>
+    <script>
+        new Valine({
+            el: '#vcomments',
+            appId: 'EcON0PaHaosYNKkLX9JVRizD-MdYXbMMI',
+            appKey: 'jH2cVeKCbBUSfBWdWFdhtEQL'
+        })
+    </script>
+  <!-- pinglun -->
+          
+        </div>
+      </div>
+    </div>
+  </article>
+ <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+              <li class="list-inline-item">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </li>
+          </ul>
+          <p class="copyright text-muted">Copyright &copy;2020 <span>天门博客</span><br><class="Themeinfo">Powered Gridea <a href="http://localhost:4000/atom.xml" target="blank">RSS</a><br><a href="https://travellings.now.sh/" target="blank" title="开往-友链接力"><img src="https://travellings.now.sh/assets/logo.gif" alt="开往-友链接力" width="80"></a></p>
+        </div>
+      </div>
+    </div>
+   </footer>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="/media/scripts/bootstrap.bundle.min.js"></script> -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.jsdelivr.net/gh/Alanrk/clean-cdn@1.0/scripts/clean-blog.min.js"></script>
+  <!-- <script src="/media/scripts/clean-blog.min.js"></script> -->
+  <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+  <style type="text/css">a.back_to_top{text-decoration:none;position:fixed;bottom:40px;right:30px;background:#f0f0f0;height:40px;width:40px;border-radius:50%;line-height:36px;font-size:18px;text-align:center;transition-duration:.5s;transition-propety:background-color;display:none}a.back_to_top span{color:#888}a.back_to_top:hover{cursor:pointer;background:#dfdfdf}a.back_to_top:hover span{color:#555}@media print,screen and(max-width:580px){.back_to_top{display:none!important}}</style>
+<a id="back_to_top" href="#" class="back_to_top">
+  <span>▲</span></a>
+<script>$(document).ready((function(_this) {
+    return function() {
+      var bt;
+      bt = $('#back_to_top');
+      if ($(document).width() > 480) {
+        $(window).scroll(function() {
+          var st;
+          st = $(window).scrollTop();
+          if (st > 30) {
+            return bt.css('display', 'block')
+          } else {
+            return bt.css('display', 'none')
+          }
+        });
+        return bt.click(function() {
+          $('body,html').animate({
+            scrollTop: 0
+          },
+          800);
+          return false
+        })
+      }
+    }
+  })(this));</script>
+  </body>
+</html>
+
